@@ -68,7 +68,6 @@
     </el-row>
     <div style="height: 100px"></div>
     <el-button @click="clear_data1">清空</el-button>
-    <el-button @click="es_test">es_test</el-button>
     <el-date-picker
             v-model="value8"
             type="datetimerange"
@@ -79,24 +78,24 @@
     >
     </el-date-picker>
     <el-select v-model="sel_source_ip" placeholder="请选择源IP">
-        <el-option v-for="item in source_ip" :key="item.source_ip" :label="item.source_ip"
+        <el-option v-for="(item,index) in source_ip" :key="index" :label="item.source_ip"
                    :value="item.source_ip"></el-option>
     </el-select>
     <el-select v-model="sel_source_port" placeholder="请选择源端口">
-        <el-option v-for="item in source_port" :key="item.source_ip" :label="item.source_port"
+        <el-option v-for="(item,index) in source_port" :key="index" :label="item.source_port"
                    :value="item.source_port"></el-option>
     </el-select>
     <el-select v-model="sel_destination_ip" placeholder="请选择目的IP">
-        <el-option v-for="item in destination_ip" :key="item.destination_ip" :label="item.destination_ip"
+        <el-option v-for="(item,index) in destination_ip" :key="index" :label="item.destination_ip"
                    :value="item.destination_ip"></el-option>
     </el-select>
     <el-select v-model="sel_destination_port" placeholder="请选择目的端口">
-        <el-option v-for="item in destination_port" :key="item.destination_port" :label="item.destination_port"
+        <el-option v-for="(item,index) in destination_port" :key="index" :label="item.destination_port"
                    :value="item.destination_port"></el-option>
     </el-select>
     <el-select v-model="sel_tcp_flag" placeholder="请选择flag">
         <el-option v-for="item in tcp_flag" :key="item.tcp_flag" :label="item.tcp_flag"
-                   :value="item.source_ip"></el-option>
+                   :value="item.tcp_flag"></el-option>
     </el-select>
     <el-button type="primary" round @click="test">搜索</el-button>
     <template>
@@ -174,6 +173,7 @@
             clear_data1() {
                 vm.value8 = '';
                 vm.sel_source_port = '';
+                vm.sel_source_ip = '';
                 vm.sel_destination_ip = '';
                 vm.sel_tcp_flag = '';
                 vm.sel_destination_port = '';
@@ -227,8 +227,8 @@
                         sel_destination_port: vm.sel_destination_port,
                     }
                 }).then((res) => {
-                    vm.tableData = res.data.res;
                     vm.tableData1 = res.data.res1;
+                    vm.tableData = res.data.res;
                     vm.source_region = res.data.source_region_List;
                     vm.destination_area = res.data.destination_area_List;
                     vm.name = res.data.name_List;

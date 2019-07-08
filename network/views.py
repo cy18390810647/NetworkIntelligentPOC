@@ -184,7 +184,7 @@ def index2(request):
                                            u'appsystem': u'linux_system'}, u'_index': u'syslog-2019-07-05'}],
                    u'total': 477, u'max_score': 1.0}, u'_shards': {u'successful': 5, u'failed': 0, u'total': 5},
          u'took': 21, u'timed_out': False}
-    return HttpResponse(json.dumps(a[u'hits']['hits'][0]))
+    return HttpResponse(json.dumps(a))
 
 
 @csrf_exempt
@@ -279,7 +279,7 @@ def test(request):
     # es_obj = Elasticsearch(['192.168.1.152:9200'])
     # query = {'query': {'match_all': {}}}  # 查找所有文档
     # all_Doc = es_obj.search(body=query, index='alarm_2019.02.11')
-    with open(r'/root/network/demo/static/txtdir/syslog.txt', 'r') as log_data:
+    with open(r'E:\2\1\NetworkIntelligentPOC\static\txtdir\syslog.txt', 'r') as log_data:
         for line in log_data:
             ss = re.findall(r' for (.+) to ', line)  # 匹配每一行中的for和to
             if len(ss) > 0:
