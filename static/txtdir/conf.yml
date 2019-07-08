@@ -1,0 +1,15 @@
+List:
+  - host: 10.176.165.241
+    username: test
+    pwd: test
+    cmds:
+      - enable
+      - 123456
+      - configure terminal
+      - interface FastEthernet1 / 0
+      - ip address 192.168.2.1 255.255.255.0
+      - no shutdown
+      - exit
+      - ip route 192.168.3.0 255.255.255.0 192.168.2.2
+      - wr
+

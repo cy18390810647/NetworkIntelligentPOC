@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>network</title>
+    <script src="/static/assets/vue-2.5.21/vue.development.js"></script>
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="/static/assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="/static/assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="/static/assets/vue-2.5.21/axios.min.js"></script>
+        <script src="/static/js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-row>
+        <el-col :span="12" :push="6">
+            <div class="grid-content bg-purple-dark">
+                <span>设置组名称:</span>
+                <el-input v-model="name" placeholder="请输入组名称" style="width: 40%"></el-input>
+                <el-button type="success" style="float: right" @click="add_group">添加组</el-button>
+                <template>
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column prop="name" label="名称" width="250">
+                        </el-table-column>
+                        <el-table-column prop="info[0].address" label="IP" width="250">
+                        </el-table-column>
+                        <el-table-column label="操作" width="250">
+                            <template slot-scope="scope">
+                                <el-button
+                                        size="mini"
+                                        type="success"
+                                        @click="add_ip1(scope.row.name)">添加
+                                </el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click="add_ip2(scope.row)">详情
+                                </el-button>
+                                <el-button
+                                        size="mini"
+                                        type="success"
+                                        @click="group_conf">执行配置
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+        </el-col>
+    </el-row>
+    <el-dialog
+            title="信息配置"
+            :visible.sync="dialogVisible3"
+            width="50%"
+            :before-close="handleClose">
+        <el-row>
+            <el-col :span="14" :push="4">
+                <div class="grid-content bg-purple-dark">
+                    <el-form :model="form3" label-width="90px">
+                        <h3>基本信息</h3>
+                        <el-form-item label="设备名称*">
+                            <el-input v-model="form3.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备地址*">
+                            <el-input v-model="form3.address"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备账号*">
+                            <el-input v-model="form3.username"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备密码*">
+                            <el-input v-model="form3.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备类别">
+                            <el-input v-model="form3.type"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备子类别" >
+                            <el-input v-model="form3.child_type"></el-input>
+                        </el-form-item>
+                        <el-form-item label="自动配置">
+                            <el-input v-model="form3.auto_conf"></el-input>
+                        </el-form-item>
+                        <div style="width: 50px"></div>
+                        <h3 style="padding-top: 20px">描述信息</h3>
+                        <el-form-item label="联系方式">
+                            <el-input v-model="form3.cont_info"></el-input>
+                        </el-form-item>
+                        <el-form-item label="物理位置">
+                            <el-input v-model="form3.position"></el-input>
+                        </el-form-item>
+                        <el-form-item label="备注信息">
+                            <el-input v-model="form3.remarks"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible3 = false">取 消</el-button>
+            <el-button type="primary" @click="edit_info">确 定</el-button>
+        </span>
+    </el-dialog>
+    <el-dialog
+            title="组详情"
+            :visible.sync="dialogVisible2"
+            width="70%"
+            :before-close="handleClose">
+        <template>
+            <el-table
+                    :data="tableData1"
+                    style="width: 100%">
+                <el-table-column
+                        prop="name"
+                        label="设备名称"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        label="设备地址"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="username"
+                        label="设备账号"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        label="设备类别"
+                        width="180">
+                </el-table-column>
+                <el-table-column label="操作" width="250">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                type="success"
+                                @click="edit(scope.row)">修改
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="delete_info(scope.$index, tableData1)">删除
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="success"
+                                @click="ip_conf">执行配置
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible2 = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+        </span>
+    </el-dialog>
+    <el-dialog
+            title="信息配置"
+            :visible.sync="dialogVisible1"
+            width="50%"
+            :before-close="handleClose">
+        <el-row>
+            <el-col :span="14" :push="4">
+                <div class="grid-content bg-purple-dark">
+                    <el-form :model="form" label-width="90px">
+                        <h3>基本信息</h3>
+                        <el-form-item label="设备名称*">
+                            <el-input v-model="form.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备地址*">
+                            <el-input v-model="form.address"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备账号*">
+                            <el-input v-model="form.username"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备密码*">
+                            <el-input v-model="form.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备类别">
+                            <el-input v-model="form.type"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备子类别" >
+                            <el-input v-model="form.child_type"></el-input>
+                        </el-form-item>
+                        <el-form-item label="自动配置">
+                            <el-input v-model="form.auto_conf"></el-input>
+                        </el-form-item>
+                        <div style="width: 50px"></div>
+                        <h3 style="padding-top: 20px">描述信息</h3>
+                        <el-form-item label="联系方式">
+                            <el-input v-model="form.cont_info"></el-input>
+                        </el-form-item>
+                        <el-form-item label="物理位置">
+                            <el-input v-model="form.position"></el-input>
+                        </el-form-item>
+                        <el-form-item label="备注信息">
+                            <el-input v-model="form.remarks"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible1 = false">取 消</el-button>
+            <el-button type="primary" @click="add_ip">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            a:{},
+            form3:{},
+            group_name:'',
+            form:{
+                "name":'',
+                "address":'',
+                "username":'',
+                "password":'',
+                "type":'',
+                "child_type":'',
+                "auto_conf":'',
+                "cont_info":'',
+                "position":'',
+                "remarks":'',
+            },
+
+            name:'',
+            dialogVisible2:false,
+            dialogVisible1:false,
+            dialogVisible3:false,
+            tableData1:[
+                {
+                    name:'test',
+                    address:'192.168.1.2',
+                    username:'root',
+                    type:'type1'
+                }
+            ],
+            tableData:[
+                {
+                    name:'test',
+                    info:[]
+                }
+            ]
+        },
+        methods: {
+            group_conf(){
+                axios({
+                     method: 'post',
+                    url: '/group_conf/',
+                    data: {
+                        data:vm.tableData
+                    }
+                }).then((res)=>{
+
+                })
+            },
+            ip_conf(){
+                axios({
+                     method: 'post',
+                    url: '/ip_conf/',
+                    data: {
+
+                    }
+                }).then((res)=>{
+
+                })
+            },
+            delete_info(index, rows){
+                rows.splice(index, 1);
+            },
+            edit_info(){
+                vm.dialogVisible3 = false;
+                let address = vm.form3.address;
+                let flag = 0;
+                for (var i = 0; i <= vm.tableData.length; i++){
+                    for (var j = 0; j < vm.tableData[i].info.length; j++) {
+                        if (address == vm.tableData[i].info[j].address){
+                            flag = 1;
+                            vm.form3 = vm.a
+                        }
+                    }
+                }
+                if (flag == 0){
+
+                }
+            },
+            edit(value){
+                vm.dialogVisible3 = true;
+                vm.a = JSON.parse(JSON.stringify(value));
+                vm.form3 = value;
+            },
+            add_ip2(value){
+                vm.tableData1 = value.info;
+                vm.dialogVisible2 = true;
+            },
+            add_ip1(value) {
+                vm.dialogVisible1 = true;
+                vm.group_name = JSON.parse(JSON.stringify(value))
+            },
+            add_ip(){
+                let flag = 0;
+                if(vm.form.name == '' || vm.form.address == '' || vm.form.username == '' || vm.form.password == '') {
+                    this.$message('请输入必填项!');
+                }
+                else {
+                    for (var i = 0; i <= vm.tableData.length; i++) {
+                        console.log();
+                        if(vm.tableData[i].info.length >0) {
+                            for (var j = 0; j < vm.tableData[i].info.length; j++) {
+                                if (vm.form.address == vm.tableData[i].info[j].address) {
+                                    this.$message('该地址已编组');
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        //console.log(vm.tableData[i].name,vm.group_name);
+                        if (vm.group_name == vm.tableData[i].name && flag == 0) {
+                            if (vm.tableData[i].info.length == 0) {
+                                vm.tableData[i].info.push(JSON.parse(JSON.stringify(vm.form)));
+                                vm.dialogVisible1 = false;
+                                vm.clear();
+                                this.$message({
+                                    message: '恭喜你，添加成功！',
+                                    type: 'success'
+                                });
+                                break;
+                            }
+                            else {
+                                for (var j = 0; j < vm.tableData[i].info.length; j++) {
+                                    if (vm.form.address == vm.tableData[i].info[j].address) {
+                                        this.$message('该地址已编组');
+                                        break;
+                                    }
+                                    else if (j == vm.tableData[i].info.length - 1) {
+                                        vm.tableData[i].info.push(JSON.parse(JSON.stringify(vm.form)));
+                                        vm.dialogVisible1 = false;
+                                        vm.clear();
+                                        this.$message({
+                                            message: '恭喜你，添加成功！',
+                                            type: 'success'
+                                        });
+                                        break;
+                                    }else {
+                                        console.log(i,j)
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            },
+            clear() {
+                vm.form = {
+                    "name": '',
+                    "address": '',
+                    "username": '',
+                    "password": '',
+                    "type": '',
+                    "child_type": '',
+                    "auto_conf": '',
+                    "cont_info": '',
+                    "position": '',
+                    "remarks": '',
+                }
+            },
+            add_group(){
+                for (var i=0;i<vm.tableData.length;i++){
+                    if (vm.name == vm.tableData[i].name){
+                        this.$message('组名已存在');
+                        break;
+                    }
+                    else if(i==vm.tableData.length-1){
+                        vm.tableData.push({"name":vm.name, "info": []});
+                        break;
+                    }
+                }
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            }
+        }
+    })
+</script>
+</body>
+</html>

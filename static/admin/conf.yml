@@ -1,0 +1,47 @@
+#配置数组 每条数据包括机器的信息和需要执行的命令，命令写在cmds中
+#需要配置多个机器就在List数组里面加
+List:
+  - host: 192.168.43.28
+    username: test
+    pwd: test
+    cmds:
+      - enable
+      - 123456
+      - configure terminal
+      - interface FastEthernet1/0
+      - ip address 192.168.2.1 255.255.255.0
+      - no shutdown
+      - exit
+      - ip route 192.168.3.0 255.255.255.0 192.168.2.2
+      - exit
+      - wr
+  - host: 192.168.43.29
+    username: 1234
+    pwd: 1234
+    cmds:
+      - enable
+      - 123456
+      - configure terminal
+      - interface FastEthernet2/0
+      - ip address 192.168.2.2 255.255.255.0
+      - no shutdown
+      - exit
+      - interface FastEthernet1/0
+      - ip address 192.168.3.1 255.255.255.0
+      - no shutdown
+      - exit
+      - wr
+  - host: 192.168.43.30
+    username: 12345
+    pwd: 12345
+    cmds:
+      - enable
+      - 123456
+      - configure terminal
+      - interface FastEthernet1/0
+      - ip address 192.168.3.2 255.255.255.0
+      - no shutdown
+      - exit
+      - ip route 192.168.2.0 255.255.255.0 192.168.3.1
+      - exit
+      - wr
