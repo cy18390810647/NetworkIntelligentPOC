@@ -190,17 +190,21 @@ def index2(request):
 @csrf_exempt
 def group_conf(request):
     res_data = json.loads(request.body)
-    print(res_data['data'])
+    print(res_data)
     str = ("List:"+'\n')
+    host = res_data['data'][0]['info'][0]['address']
+    username = res_data['data'][0]['info'][0]['username']
+    pwd = res_data['data'][0]['info'][0]['password']
     for i in range(2):
-        str1 = ("  - host: {}".format('1')+'\n'
-           "    username: {}".format('2')+'\n'
-           "    pwd: {}".format('3')+'\n'
+        str1 = (
+           "  - host: {}".format(host)+'\n'
+           "    username: {}".format(username)+'\n'
+           "    pwd: {}".format(pwd)+'\n'
            "    cmds:"+'\n'
            "      - enable"+'\n'
            "      - 123456"+'\n'
            "      - configure terminal"+'\n'
-           "      - interface FastEthernet1 / 0"+'\n'
+           "      - interface FastEthernet1/0"+'\n'
            "      - ip address 192.168.2.1 255.255.255.0"+'\n'
            "      - no shutdown"+'\n'
            "      - exit"+'\n'
@@ -209,7 +213,7 @@ def group_conf(request):
            "      - wr"+'\n'
         )
         str = str+str1
-    with open('/demo/static/txtdir/conf.yml', 'w+')as f:
+    with open('../NetworkIntelligentPOC/static/txtdir/conf.yml', 'w+')as f:
         f.write(str)
     res = {"res": True}
     return HttpResponse(json.dumps(res))
@@ -267,11 +271,14 @@ def test(request):
     try:
         start_time = int(time.mktime(time.strptime(str(res_data['date_time'][0]), "%Y-%m-%d %H:%M:%S")))
         end_time = int(time.mktime(time.strptime(str(res_data['date_time'][1]), "%Y-%m-%d %H:%M:%S")))
-        start_time1 = int(time.mktime(time.strptime(str(res_data['date_time1'][0]), "%Y-%m-%d %H:%M:%S")))
-        end_time1 = int(time.mktime(time.strptime(str(res_data['date_time1'][1]), "%Y-%m-%d %H:%M:%S")))
+
     except Exception as e:
         start_time = 0
         end_time = 0
+    try:
+        start_time1 = int(time.mktime(time.strptime(str(res_data['date_time1'][0]), "%Y-%m-%d %H:%M:%S")))
+        end_time1 = int(time.mktime(time.strptime(str(res_data['date_time1'][1]), "%Y-%m-%d %H:%M:%S")))
+    except Exception as e:
         start_time1 = 0
         end_time1 = 0
     data_list = []  # 数据列表

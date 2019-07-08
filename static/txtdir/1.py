@@ -19,9 +19,8 @@ def verification_ssh(host, username, password, cmds, port=22):
     chan.get_pty()
     chan.invoke_shell()
     for cmd in cmds:
-        print(cmd)
-        a = chan.send(str(cmd) + "\n")
-        print(a)
+        print cmd
+        chan.send(str(cmd) + "\n")
         time.sleep(1)
     time.sleep(3)
     strz = chan.recv(65535)
