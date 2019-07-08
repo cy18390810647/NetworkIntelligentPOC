@@ -1,7 +1,5 @@
-#配置数组 每条数据包括机器的信息和需要执行的命令，命令写在cmds中
-#需要配置多个机器就在List数组里面加
 List:
-  - host: 192.168.43.28
+  - host: 10.176.165.242
     username: test
     pwd: test
     cmds:
@@ -15,7 +13,7 @@ List:
       - ip route 192.168.3.0 255.255.255.0 192.168.2.2
       - exit
       - wr
-  - host: 192.168.43.29
+  - host: 10.176.165.242
     username: 1234
     pwd: 1234
     cmds:
@@ -31,7 +29,7 @@ List:
       - no shutdown
       - exit
       - wr
-  - host: 192.168.43.30
+  - host: 10.176.165.242
     username: 12345
     pwd: 12345
     cmds:

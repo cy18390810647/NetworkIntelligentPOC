@@ -47,7 +47,7 @@
     </el-select>
     <el-button type="primary" round @click="test">搜索</el-button>
     <el-row>
-        <el-col :span="10">
+        <el-col :span="8">
             <div class="grid-content bg-purple">
                 <template>
                     <el-table :data="tableData" style="width: 100%">
@@ -59,10 +59,9 @@
                 </template>
             </div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="16">
             <div class="grid-content bg-purple">
-                <el-button type="primary" round @click="test1">搜索</el-button>
-                <div id="main" style="width: 1100px;height:600px;"></div>
+                <div id="main" style="width: 1350px;height:600px;"></div>
             </div>
         </el-col>
     </el-row>
@@ -237,6 +236,7 @@
                     vm.destination_ip = res.data.destination_ip_List;
                     vm.tcp_flag = res.data.tcp_flag_List;
                     vm.destination_port = res.data.destination_port_List;
+                    vm.test1()
                 })
             }
         }
