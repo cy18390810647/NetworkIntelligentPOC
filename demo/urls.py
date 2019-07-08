@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^group_conf/', views.group_conf),
     url(r'^index/', views.index),
     url (r'^index1/', views.index1),
-    url (r'^index2/', views.index2),
-    # url(r'^', views.index),
+
+    url(r'^', views.index),
     # url(r'^test/', network.test),
 ]

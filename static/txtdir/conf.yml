@@ -13,7 +13,7 @@ List:
       - ip route 192.168.3.0 255.255.255.0 192.168.2.2
       - exit
       - wr
-  - host: 192.168.43.28
+  - host: 10.176.165.242
     username: test
     pwd: test
     cmds:
@@ -25,11 +25,5 @@ List:
       - no shutdown
       - exit
       - ip route 192.168.3.0 255.255.255.0 192.168.2.2
-      - exit
-      - wr
-      - interface vlan 2
-      - ip address 1.1.1.1 255.255.255.0
-      - no shutdown
-      - exit
       - exit
       - wr
