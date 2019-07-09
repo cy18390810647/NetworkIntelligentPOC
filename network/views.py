@@ -4,7 +4,7 @@ import json
 import time
 from django.shortcuts import render
 import re
-# from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 from django.views.decorators.csrf import csrf_exempt
 import os
 import ConfigParser
@@ -106,11 +106,19 @@ def test(request):
         end_time1 = 0
     data_list = []  # 数据列表
     data_list1 = []
-    # es_obj = Elasticsearch(['192.168.1.152:9200'])
-    # query = {'query': {'match_all': {}}}  # 查找所有文档
-    # all_Doc = es_obj.search(body=query, index='alarm_2019.02.11')
+    """
+    es_obj = Elasticsearch([get_app_config_es_address()])
+    query = {'query': {'match_all': {}}}  # 查找所有文档
+    all_Doc = es_obj.search(body=query, index='alarm_2019.02.11')
+    """
     # 获取日志文件路径
     log_file_path = get_app_config_filepath('fileUrl')
+    # 如果文件不存在直接返回
+    if os.path.exists(log_file_path) is False:
+        return
+    # 如果文件为空直接返回
+    if os.path.getsize(log_file_path) == 0:
+        return
     with open(log_file_path, 'r') as log_data:
         for line in log_data:
             ss = re.findall(r' for (.+) to ', line)  # 匹配每一行中的for和to
@@ -191,19 +199,50 @@ def test(request):
     return HttpResponse(json.dumps(res))
 
 
+def get_app_config_es_address():
+    """
+    获取ES地址
+    :return:
+    """
+    es_address = get_app_config().get('esAddress', 'ip')
+    es_port = get_app_config().get('esAddress', 'port')
+    return es_address+":"+es_port
+
+
 def get_app_config_filepath(file_path):
     """
     获取日志文件路径
     :param file_path:
     :return:
     """
+    log_file_path = get_app_config().get('file', file_path)
+    return log_file_path
+
+
+def get_app_config():
+    """
+    获取公用配置文件
+    :return:
+    """
+    # 获取当前工程的根目录
+    root_path = get_prj_root_path()
+    cp = ConfigParser.SafeConfigParser()
+    cp.read(root_path + 'network/myapp.conf')
+    return cp
+
+
+def get_prj_root_path():
+    """
+    获取项目根路径
+    :return:
+    """
     cur_path = os.path.abspath(os.path.dirname(__file__))
     # 获取当前工程的根目录
     root_path = cur_path[:cur_path.find("NetworkIntelligentPOC\\") + len("NetworkIntelligentPOC\\")]
-    cp = ConfigParser.SafeConfigParser()
-    cp.read(root_path + 'network/myapp.conf')
-    log_file_path = cp.get('file', file_path)
-    return log_file_path
+    return root_path
+
+
+
 
 
 
