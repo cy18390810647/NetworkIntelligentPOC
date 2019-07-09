@@ -7,6 +7,7 @@ import re
 # from elasticsearch import Elasticsearch
 from django.views.decorators.csrf import csrf_exempt
 import os
+import ConfigParser
 
 
 @csrf_exempt
@@ -108,7 +109,9 @@ def test(request):
     # es_obj = Elasticsearch(['192.168.1.152:9200'])
     # query = {'query': {'match_all': {}}}  # 查找所有文档
     # all_Doc = es_obj.search(body=query, index='alarm_2019.02.11')
-    with open(r'..\NetworkIntelligentPOC\static\txtdir\syslog.txt', 'r') as log_data:
+    # 获取日志文件路径
+    log_file_path = get_app_config_filepath('fileUrl')
+    with open(log_file_path, 'r') as log_data:
         for line in log_data:
             ss = re.findall(r' for (.+) to ', line)  # 匹配每一行中的for和to
             if len(ss) > 0:
@@ -186,4 +189,21 @@ def test(request):
         "destination_port_List": destination_port_List
     }
     return HttpResponse(json.dumps(res))
+
+
+def get_app_config_filepath(file_path):
+    """
+    获取日志文件路径
+    :param file_path:
+    :return:
+    """
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    # 获取当前工程的根目录
+    root_path = cur_path[:cur_path.find("NetworkIntelligentPOC\\") + len("NetworkIntelligentPOC\\")]
+    cp = ConfigParser.SafeConfigParser()
+    cp.read(root_path + 'network/myapp.conf')
+    log_file_path = cp.get('file', file_path)
+    return log_file_path
+
+
 
