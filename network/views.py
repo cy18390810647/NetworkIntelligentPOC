@@ -13,10 +13,10 @@ import os
 def group_conf(request):
     res_data = json.loads(request.body)
     str = ("List:"+'\n')
-    host = res_data['data'][0]['info'][0]['address']
-    username = res_data['data'][0]['info'][0]['username']
-    pwd = res_data['data'][0]['info'][0]['password']
-    for i in range(2):
+    for i in res_data['data'][0]['info']:
+        host = i['address']
+        username = i['username']
+        pwd = i['password']
         str1 = (
            "  - host: {}".format(host)+'\n'
            "    username: {}".format(username)+'\n'

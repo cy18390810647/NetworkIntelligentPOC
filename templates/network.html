@@ -45,7 +45,7 @@
         <el-option v-for="item in name" :key="item.name" :label="item.name" :value="item.name">
         </el-option>
     </el-select>
-    <el-button type="primary" round @click="test">搜索</el-button>
+    <el-button type="primary" round @click="select_data1">搜索</el-button>
     <el-row>
         <el-col :span="8">
             <div class="grid-content bg-purple">
@@ -96,7 +96,7 @@
         <el-option v-for="item in tcp_flag" :key="item.tcp_flag" :label="item.tcp_flag"
                    :value="item.tcp_flag"></el-option>
     </el-select>
-    <el-button type="primary" round @click="test">搜索</el-button>
+    <el-button type="primary" round @click="select_data2">搜索</el-button>
     <template>
         <el-table :data="tableData1" style="width: 100%">
             <el-table-column prop="name" label="设备名称" width="180"></el-table-column>
@@ -162,6 +162,12 @@
             tableData1: []
         },
         methods: {
+            select_data1(){
+
+            },
+            select_data2(){
+
+            },
             clear_data() {
                 vm.value7 = '';
                 vm.sel_source_region = '';
